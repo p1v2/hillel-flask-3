@@ -1,6 +1,6 @@
 from flask import Flask, request
 
-from db import Category, delete_category, get_products, create_product, update_product, delete_product, get_category
+from db import Category, Product, delete_category, get_products, create_product, update_product, delete_product, get_category
 from exceptions import ValidationError
 from serializers import serialize_category, serialize_product
 from deserializers import deserialize_category, deserialize_product
@@ -37,8 +37,12 @@ def products_api():
         return serialize_product(product), 201
 
 
-@app.route('/products/<int:product_id>', methods=['PUT', 'PATCH', 'DELETE'])
+@app.route('/products/<int:product_id>', methods=['PUT', 'PATCH', 'DELETE', 'GET'])
 def product_api(product_id):
+    if request.method == "GET":
+        # Get a product
+        product = get_products().where(Product.id == product_id).get()
+        return serialize_product(product)
     if request.method == "PUT":
         # Update a product
         product = deserialize_product(request.get_json(), product_id)
@@ -80,8 +84,12 @@ def categories_api():
         return serialize_category(category), 201
 
 
-@app.route('/categories/<int:category_id>', methods=['PUT', 'PATCH', 'DELETE'])
+@app.route('/categories/<int:category_id>', methods=['PUT', 'PATCH', 'DELETE', 'GET'])
 def category_api(category_id):
+    if request.method == "GET":
+        # Get a category
+        category = get_category().where(Category.id == category_id).get()
+        return serialize_category(category)
     if request.method == "PUT":
         # Update a category
         category = deserialize_category(request.get_json(), category_id)
