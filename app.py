@@ -1,9 +1,9 @@
 from flask import Flask, request
 
-from db import get_products, create_product, update_product, delete_product
+from db import Category, delete_category, get_products, create_product, update_product, delete_product, get_category
 from exceptions import ValidationError
-from serializers import serialize_product
-from deserializers import deserialize_product
+from serializers import serialize_category, serialize_product
+from deserializers import deserialize_category, deserialize_product
 
 app = Flask(__name__)
 
@@ -56,6 +56,46 @@ def product_api(product_id):
 
 
 
+@app.route('/categories', methods=['GET', 'POST'])
+def categories_api():
+    if request.method == "GET":
+        # Get all categories
+
+        name_filter = request.args.get('name')
+        categories = get_category(name_filter)
+
+        # Convert categories to list of dicts
+        categories_dicts = [
+            serialize_category(category)
+            for category in categories
+        ]
+
+        # Return categories
+        return categories_dicts
+    if request.method == "POST":
+        # Create a category
+        category = deserialize_category(request.get_json())
+
+        # Return success
+        return serialize_category(category), 201
+
+
+@app.route('/categories/<int:category_id>', methods=['PUT', 'PATCH', 'DELETE'])
+def category_api(category_id):
+    if request.method == "PUT":
+        # Update a category
+        category = deserialize_category(request.get_json(), category_id)
+        # Return success
+        return serialize_category(category)
+    if request.method == "PATCH":
+        # Update a category
+        category = deserialize_category(request.get_json(), category_id, partial=True)
+        # Return success
+        return serialize_category(category)
+    if request.method == "DELETE":
+        delete_category(category_id)
+
+        return "", 204
 
 
 
