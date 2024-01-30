@@ -87,7 +87,7 @@ def delete_product(product_id):
     Product.delete().where(Product.id == product_id).execute()
 
 
-def get_category(name, is_adult_only=None):
+def get_category(name=None, is_adult_only=None):
     # get category
     get_all = Category.select(Category)
 
