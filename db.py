@@ -48,9 +48,7 @@ class Product(Model):
 
 def get_products(name_filter=None):
     # Get all products
-    query = Product.select(
-        Product, Category
-    ).join(Category).order_by(-Product.name)
+    query = Product.select(Product, Category).join(Category).order_by(-Product.name)
 
     if name_filter is not None:
         query = query.where(Product.name == name_filter)
@@ -89,9 +87,10 @@ def delete_product(product_id):
 if __name__ == '__main__':
     cocacola = Product.get(Product.name == 'Coca-Cola')
 
-    tag = Tag.create(name='Ціна тижня')
-    another_tag = Tag.create(name='Новинка')
+    # tag = Tag.create(name='Ціна тижня')
+    # another_tag = Tag.create(name='Новинка')
 
-    cocacola.tags.add(tag)
-    cocacola.tags.add(another_tag)
-    cocacola.save()
+    # cocacola.tags.add(tag)
+    # cocacola.tags.add(another_tag)
+    # cocacola.save()
+

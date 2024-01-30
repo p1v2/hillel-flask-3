@@ -4,8 +4,10 @@ import requests
 def test_product_create():
     # Create a product
     response = requests.post('http://localhost:5001/products', json={
-        'name': 'Sandora',
+        'name': 'Aqua',
         'price': 10,
+        'category': 1,
+        
     })
 
     print(response.status_code)
@@ -57,7 +59,7 @@ def test_product_update():
     # Update a product
     response = requests.patch('http://localhost:5001/products/4', json={
         'name': 'Borjomi',
-        'price': -100,
+        'price': 50,
     })
 
     print(response.status_code)
@@ -77,4 +79,4 @@ def test_create_beer():
 
 
 if __name__ == "__main__":
-    test_create_beer()
+    test_product_create()
