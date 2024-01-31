@@ -7,7 +7,6 @@ from deserializers import deserialize_product
 
 app = Flask(__name__)
 
-
 @app.route('/hello_world')
 def hello_world():
     # Return hello world
