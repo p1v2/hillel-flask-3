@@ -1,9 +1,7 @@
-from peewee import SqliteDatabase, Model, CharField, FloatField, ForeignKeyField, BooleanField, ManyToManyField
+from peewee import SqliteDatabase, CharField, Model, FloatField, ForeignKeyField, BooleanField, ManyToManyField
 import logging
 
-
 db = SqliteDatabase('db.sqlite')
-
 
 logger = logging.getLogger('peewee')
 logger.addHandler(logging.StreamHandler())
@@ -19,6 +17,41 @@ class Category(Model):
     class Meta:
         database = db
         table_name = 'categories'
+
+
+def get_categories(name_filter=None):
+    # Get all categories
+    query = Category.select().order_by(Category.name)
+
+    if name_filter is not None:
+        query = query.where(Category.name == name_filter)
+
+    return query
+
+
+def create_category(name, is_adult_only):
+    # Create category and return category_name
+    return Category.create(name=name, is_adult_only=is_adult_only)
+
+
+def update_category(category_id, name, is_adult_only):
+    # Update category
+    category = Category.get_by_id(category_id)
+
+    if name is not None:
+        category.name = name
+
+    if is_adult_only is not None:
+        category.is_adult_only = is_adult_only
+
+    category.save()
+
+    return category
+
+
+def delete_category(category_id):
+    # Delete category
+    Category.delete().where(Category.id == category_id).execute()
 
 
 class Tag(Model):
@@ -59,7 +92,7 @@ def get_products(name_filter=None):
 
 
 def create_product(name, price, category_id):
-    # Create product and return prudct id
+    # Create product and return product id
     return Product.create(name=name, price=price, category_id=category_id)
 
 
@@ -87,11 +120,13 @@ def delete_product(product_id):
 
 
 if __name__ == '__main__':
-    cocacola = Product.get(Product.name == 'Coca-Cola')
+    # cocacola = Product.get(Product.name == 'Coca-Cola')
 
-    tag = Tag.create(name='Ціна тижня')
-    another_tag = Tag.create(name='Новинка')
+    # tag = Tag.create(name='Ціна тижня')
+    # another_tag = Tag.create(name='Новинка')
 
-    cocacola.tags.add(tag)
-    cocacola.tags.add(another_tag)
-    cocacola.save()
+    # cocacola.tags.add(tag)
+    # cocacola.tags.add(another_tag)
+    # cocacola.save()
+    SoftDrinks = Category.get(Category.name == "Soft Drinks")
+

@@ -1,7 +1,7 @@
-from db import Product
+from db import Product, Category
 
 
-def serialize_category(category):
+def serialize_category(category: Category):
     return {
         'id': category.id,
         'name': category.name,
