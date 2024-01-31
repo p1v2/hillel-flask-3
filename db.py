@@ -12,8 +12,6 @@ class Category(Model):
     name = CharField()
     is_adult_only = BooleanField(default=False)
 
-    # products = ...
-
     class Meta:
         database = db
         table_name = 'categories'
@@ -49,9 +47,10 @@ def update_category(category_id, name, is_adult_only):
     return category
 
 
-def delete_category(category_id):
+def delete_category(category_name):
     # Delete category
-    Category.delete().where(Category.id == category_id).execute()
+    Category.delete().where(Category.name == category_name).execute()
+    return True
 
 
 class Tag(Model):
@@ -117,16 +116,13 @@ def update_product(product_id, name, price, category_id):
 def delete_product(product_id):
     # Delete product
     Product.delete().where(Product.id == product_id).execute()
+    return True
 
 
 if __name__ == '__main__':
-    # cocacola = Product.get(Product.name == 'Coca-Cola')
+    #Category.create(name='Detergents', is_adult_only=1)
+    #delete_category(category_name='Detergents')
+    update_category(category_id=10, name='Chips', is_adult_only=0)
+    #create_category(name='', is_adult_only=0)
 
-    # tag = Tag.create(name='Ціна тижня')
-    # another_tag = Tag.create(name='Новинка')
-
-    # cocacola.tags.add(tag)
-    # cocacola.tags.add(another_tag)
-    # cocacola.save()
-    SoftDrinks = Category.get(Category.name == "Soft Drinks")
-
+    Category.update()

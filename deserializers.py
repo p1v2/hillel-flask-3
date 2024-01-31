@@ -25,5 +25,5 @@ def deserialize_category(category_json, category_id=None, partial=False):
 
     if name is None and not partial:
         raise ValidationError('Category name is required')
-    if is_adult_only is not None and is_adult_only != 0 or is_adult_only != 1:
-        raise ValidationError('is_adult_only must be 0 or 1')
+    #if is_adult_only is None or is_adult_only != 0 or is_adult_only != 1:
+     #   raise ValidationError('is_adult_only must be 0 or 1 and not empty')

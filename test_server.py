@@ -57,7 +57,7 @@ def test_product_update():
     # Update a product
     response = requests.patch('http://localhost:5001/products/4', json={
         'name': 'Borjomi',
-        'price': -100,
+        'price': 100,
     })
 
     print(response.status_code)
@@ -75,6 +75,27 @@ def test_create_beer():
     print(response.status_code)
     print(response.json())
 
+def test_category_update_name_is_not_empty():
+    # Update a category
+    response = requests.put('http://localhost:5001/categories/10', json={
+        'name': 'Butter',
+        'is_adult_only': 0,
+    })
+
+    print(response.status_code)
+    print(response.json())
+
+def test_category_create_name_is_not_empty():
+    # Create a category
+    response = requests.post('http://localhost:5001/categories', json={
+        'name': 'Butter',
+        'is_adult_only': 0,
+    })
+
+    print(response.status_code)
+    print(response.json())
 
 if __name__ == "__main__":
+    #test_category_update_name_is_not_empty()
+    #test_category_create_name_is_not_empty()
     test_create_beer()
