@@ -39,10 +39,13 @@ def products_api():
 
 @app.route('/products/<int:product_id>', methods=['PUT', 'PATCH', 'DELETE', 'GET'])
 def product_api(product_id):
-    if request.method == "GET":
-        # Get a product
-        product = get_products().where(Product.id == product_id).get()
-        return serialize_product(product)
+    try:
+        if request.method == "GET":
+            # Get a product
+            product = get_products().where(Product.id == product_id).get()
+            return serialize_product(product)
+    except Product.DoesNotExist:
+        return "такого продукту немає", 404
     if request.method == "PUT":
         # Update a product
         product = deserialize_product(request.get_json(), product_id)
@@ -86,10 +89,13 @@ def categories_api():
 
 @app.route('/categories/<int:category_id>', methods=['PUT', 'PATCH', 'DELETE', 'GET'])
 def category_api(category_id):
-    if request.method == "GET":
-        # Get a category
-        category = get_category().where(Category.id == category_id).get()
-        return serialize_category(category)
+    try:
+        if request.method == "GET":
+            # Get a category
+            category = get_category().where(Category.id == category_id).get()
+            return serialize_category(category)
+    except:
+        return "такої категорії немає", 404
     if request.method == "PUT":
         # Update a category
         category = deserialize_category(request.get_json(), category_id)
