@@ -48,9 +48,7 @@ class Product(Model):
 
 def get_products(name_filter=None):
     # Get all products
-    query = Product.select(
-        Product, Category
-    ).join(Category).order_by(-Product.name)
+    query = Product.select(Product, Category).join(Category).order_by(-Product.name)
 
     if name_filter is not None:
         query = query.where(Product.name == name_filter)
@@ -63,7 +61,7 @@ def create_product(name, price, category_id):
     return Product.create(name=name, price=price, category_id=category_id)
 
 
-def update_product(product_id, name, price, category_id):
+def update_product(product_id, name, price, category_id, tags=None):
     # Update product
     product = Product.get_by_id(product_id)
 
@@ -75,6 +73,9 @@ def update_product(product_id, name, price, category_id):
 
     if category_id is not None:
         product.category_id = category_id
+    
+    if tags is not None:
+        product.tags = tags
 
     product.save()
 
@@ -86,12 +87,53 @@ def delete_product(product_id):
     Product.delete().where(Product.id == product_id).execute()
 
 
+def get_category(name=None, is_adult_only=None):
+    # get category
+    get_all = Category.select(Category)
+
+    if name is not None:
+        get_all = get_all.where(Category.name == name)
+
+    if is_adult_only is not None:
+        get_all = get_all.where(Category.is_adult_only == is_adult_only)
+    
+    return get_all
+
+
+def create_category(name, is_adult_only):
+    # Create category
+    return Category.create(name=name, is_adult_only=is_adult_only)
+
+
+def update_category(category_id, name, is_adult_only):
+    # Update category
+    category = Category.get_by_id(category_id)
+
+    if name is not None:
+        category.name = name
+
+    if is_adult_only is not None:
+        category.is_adult_only = is_adult_only
+
+    category.save()
+
+    return category
+
+def delete_category(category_id):
+    # Delete category
+    Category.delete().where(Category.id == category_id).execute()
+    return f"Category {category_id} deleted"
+
+
+
+
 if __name__ == '__main__':
-    cocacola = Product.get(Product.name == 'Coca-Cola')
+    cocacola = Category.get(Category.id == '3')
 
-    tag = Tag.create(name='Ціна тижня')
-    another_tag = Tag.create(name='Новинка')
+    # tag = Tag.create(name='Ціна тижня')
+    # another_tag = Tag.create(name='Новинка')
 
-    cocacola.tags.add(tag)
-    cocacola.tags.add(another_tag)
-    cocacola.save()
+    # cocacola.tags.add(tag)
+    # cocacola.tags.add(another_tag)
+    # cocacola.save()
+
