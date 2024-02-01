@@ -1,11 +1,10 @@
 import requests
-
-
+from deserializers import deserialize_product, deserialize_category
 def test_product_create():
     # Create a product
     response = requests.post('http://localhost:5001/products', json={
         'name': 'Sandora',
-        'price': 10,
+        'price': 0,
     })
 
     print(response.status_code)
@@ -85,17 +84,24 @@ def test_category_update_name_is_not_empty():
     print(response.status_code)
     print(response.json())
 
+
 def test_category_create_name_is_not_empty():
     # Create a category
     response = requests.post('http://localhost:5001/categories', json={
         'name': 'Butter',
-        'is_adult_only': 0,
+        'is_adult_only': 0
     })
 
-    print(response.status_code)
-    print(response.json())
+    if response.status_code == 500:
+        print('Server')
+    else:
+        print(response.status_code)
+        print(response.json())
+
+
+
 
 if __name__ == "__main__":
     #test_category_update_name_is_not_empty()
-    #test_category_create_name_is_not_empty()
-    test_create_beer()
+    test_category_create_name_is_not_empty()
+    #test_create_beer()

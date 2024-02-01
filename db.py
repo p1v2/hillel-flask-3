@@ -1,4 +1,5 @@
-from peewee import SqliteDatabase, CharField, Model, FloatField, ForeignKeyField, BooleanField, ManyToManyField
+from peewee import SqliteDatabase, CharField, Model, FloatField, ForeignKeyField, \
+BooleanField, ManyToManyField, PrimaryKeyField, AutoField
 import logging
 
 db = SqliteDatabase('db.sqlite')
@@ -9,6 +10,7 @@ logger.setLevel(logging.DEBUG)
 
 
 class Category(Model):
+    id = PrimaryKeyField, AutoField()
     name = CharField()
     is_adult_only = BooleanField(default=False)
 
@@ -68,6 +70,7 @@ class Product(Model):
     # price REAL
 
     # Fields are columns in DB
+    id = PrimaryKeyField, AutoField()
     name = CharField()
     price = FloatField()
     category = ForeignKeyField(Category, backref='products')
