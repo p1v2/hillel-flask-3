@@ -20,5 +20,5 @@ def serialize_product(product: Product):
         'name': product.name,
         'price': product.price,
         'category': serialize_category(product.category),
-        'tags': [serialize_tag(tag) for tag in product.tags]
+        'tags': [serialize_tag(tag) for tag in product.tags],
     }

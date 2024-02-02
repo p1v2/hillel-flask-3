@@ -10,7 +10,7 @@ logger.setLevel(logging.DEBUG)
 
 
 class Category(Model):
-    id = PrimaryKeyField, AutoField()
+    #id = PrimaryKeyField, AutoField()
     name = CharField()
     is_adult_only = BooleanField(default=False)
 
@@ -18,13 +18,27 @@ class Category(Model):
         database = db
         table_name = 'categories'
 
-
-def get_categories(name_filter=None):
-    # Get all categories
-    query = Category.select().order_by(Category.name)
+def get_category_by_name(name_filter=None):
+    # Get products by name
+    query = Category.select(Category).order_by(-Category.name)
 
     if name_filter is not None:
         query = query.where(Category.name == name_filter)
+
+    return query
+
+def get_category_by_id(id_filter=None):
+    # Get products by id
+    query = Category.select(Category).order_by(-Category.id)
+
+    if id_filter is not None:
+        query = query.where(Category.id == id_filter)
+
+    return query
+
+def get_categories():
+    # Get all categories
+    query = Category.select().order_by(Category.name)
 
     return query
 
@@ -49,9 +63,9 @@ def update_category(category_id, name, is_adult_only):
     return category
 
 
-def delete_category(category_name):
+def delete_category(category_id):
     # Delete category
-    Category.delete().where(Category.name == category_name).execute()
+    Category.delete().where(Category.id == category_id).execute()
     return True
 
 
@@ -70,7 +84,7 @@ class Product(Model):
     # price REAL
 
     # Fields are columns in DB
-    id = PrimaryKeyField, AutoField()
+    #id = PrimaryKeyField, AutoField()
     name = CharField()
     price = FloatField()
     category = ForeignKeyField(Category, backref='products')
@@ -81,14 +95,34 @@ class Product(Model):
         table_name = 'products'
 
 
-def get_products(name_filter=None):
-    # Get all products
+def get_products_by_name(name_filter=None):
+    # Get products by name
     query = Product.select(
         Product, Category
     ).join(Category).order_by(-Product.name)
 
     if name_filter is not None:
         query = query.where(Product.name == name_filter)
+
+    return query
+
+def get_products_by_id(id_filter=None):
+    # Get products by id
+    query = Product.select(
+        Product, Category
+    ).join(Category).order_by(-Product.id)
+
+    if id_filter is not None:
+        query = query.where(Product.id == id_filter)
+
+    return query
+
+def get_products():
+    # Get all products
+
+    query = Product.select(
+        Product, Category
+    ).join(Category).order_by(-Product.name)
 
     return query
 
@@ -125,7 +159,7 @@ def delete_product(product_id):
 if __name__ == '__main__':
     #Category.create(name='Detergents', is_adult_only=1)
     #delete_category(category_name='Detergents')
-    update_category(category_id=10, name='Chips', is_adult_only=0)
+    #update_category(category_id=10, name='Chips', is_adult_only=0)
     #create_category(name='', is_adult_only=0)
 
-    Category.update()
+    delete_category(8)

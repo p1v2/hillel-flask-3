@@ -1,6 +1,7 @@
-from flask import Flask, request
+from flask import Flask, request, url_for, redirect
 
-from db import get_products, create_product, update_product, delete_product, get_categories, delete_category, \
+from db import get_products, get_products_by_id, get_products_by_name, create_product, update_product, \
+    delete_product, get_categories, delete_category, get_category_by_id, get_category_by_name,\
     create_category, update_category
 from exceptions import ValidationError
 from serializers import serialize_product, serialize_category
@@ -8,24 +9,34 @@ from deserializers import deserialize_product, deserialize_category
 
 app = Flask(__name__)
 
+@app.route('/')
+def main_page_api():
+    # Creating links to /categories and /products using url_for
+    categories_link = url_for('categories_api')
+    products_link = url_for('products_api')
+
+    # Displaying links on the main page
+    return (f'<a href="{categories_link}">Categories</a><br><br><a href="{products_link}">Products</a>')
+
 @app.route('/products', methods=['GET', 'POST'])
 def products_api():
     if request.method == "GET":
         name_filter = request.args.get('name')
+        id_filter = request.args.get('id')
+        filtered_products = get_products()
 
-        products = get_products(name_filter)
+        if id_filter is not None:
+            filtered_products = get_products_by_id(id_filter)
+        if name_filter is not None:
+            filtered_products = get_products_by_name(name_filter)
 
-        # Convert products to list of dicts
-        products_dicts = [
-            serialize_product(product)
-            for product in products
-        ]
-
-        # Return products
+        products_dicts = [serialize_product(product) for product in filtered_products]
         return products_dicts
+
     if request.method == "POST":
         # Create a product
         product = deserialize_product(request.get_json())
+
 
         # Return success
         return serialize_product(product), 201
@@ -45,24 +56,26 @@ def product_api(product_id):
         return serialize_product(product)
     if request.method == "DELETE":
         delete_product(product_id)
-
-        return "", 204
+        return "Product has been Deleted", 204
 
 
 @app.route('/categories', methods=['GET', 'POST'])
 def categories_api():
     if request.method == "GET":
         name_filter = request.args.get('name')
-        categories = get_categories(name_filter)
+        id_filter = request.args.get('id')
+        filtered_dicts = get_categories()
 
         # Convert categories to list of dicts
-        categories_dicts = [
-            serialize_category(category)
-            for category in categories
-        ]
+        if name_filter:
+            filtered_dicts = get_category_by_name(name_filter)
+        if id_filter:
+            filtered_dicts = get_category_by_id(id_filter)
 
+        categories_dicts = [serialize_category(category) for category in filtered_dicts]
         # Return categories
         return categories_dicts
+
     if request.method == "POST":
         # Create a category
         category = deserialize_category(request.get_json())
@@ -85,8 +98,7 @@ def category_api(category_id):
         return serialize_category(category)
     if request.method == "DELETE":
         delete_category(category_id)
-
-        return "", 204
+        return "Category has been Deleted", 204
 
 
 @app.errorhandler(ValidationError)
@@ -97,4 +109,4 @@ def handle_validation_error(e):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5001)
+    app.run(host='localhost', debug=True, port=5001)
