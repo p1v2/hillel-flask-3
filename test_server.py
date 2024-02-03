@@ -70,7 +70,7 @@ def test_category_delete(category_id):
 
 def check_category_exist(category_id):
 
-    response = requests.patch(f'http://localhost:5001/categories/{category_id}', json=None)
+    response = requests.get(f'http://localhost:5001/categories/{category_id}', json=None)
 
     if response.status_code == 404:
         print(f"Category with ID {category_id} does not exist.")
@@ -86,8 +86,8 @@ def check_category_exist(category_id):
 
 if __name__ == "__main__":
     #test_category_update()
-    #test_category_create()
-    check_category_exist(9)
+    check_category_exist(30)
+    #check_category_exist(9)
     #test_product_create()
     #test_category_exist()
     #test_category_delete(10)

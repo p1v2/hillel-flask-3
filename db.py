@@ -8,9 +8,12 @@ logger = logging.getLogger('peewee')
 logger.addHandler(logging.StreamHandler())
 logger.setLevel(logging.DEBUG)
 
+class BaseModel(Model):
+    class Meta:
+        database = db
 
-class Category(Model):
-    #id = PrimaryKeyField, AutoField()
+class Category(BaseModel):
+
     name = CharField()
     is_adult_only = BooleanField(default=False)
 
@@ -69,7 +72,7 @@ def delete_category(category_id):
     return True
 
 
-class Tag(Model):
+class Tag(BaseModel):
     name = CharField()
 
     class Meta:
@@ -78,13 +81,9 @@ class Tag(Model):
 
 
 # Class is a Table in DB (model)
-class Product(Model):
-    # id INTEGER PRIMARY KEY
-    # name TEXT
-    # price REAL
+class Product(BaseModel):
 
     # Fields are columns in DB
-    #id = PrimaryKeyField, AutoField()
     name = CharField()
     price = FloatField()
     category = ForeignKeyField(Category, backref='products')
@@ -114,8 +113,7 @@ def get_products_by_id(id_filter=None):
 
     if id_filter is not None:
         query = query.where(Product.id == id_filter)
-
-    return query
+        return query
 
 def get_products():
     # Get all products
@@ -162,4 +160,4 @@ if __name__ == '__main__':
     #update_category(category_id=10, name='Chips', is_adult_only=0)
     #create_category(name='', is_adult_only=0)
 
-    delete_category(8)
+    get_product_by_id(1)

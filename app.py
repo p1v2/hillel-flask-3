@@ -1,4 +1,4 @@
-from flask import Flask, request, url_for, redirect
+from flask import Flask, request, url_for
 
 from db import get_products, get_products_by_id, get_products_by_name, create_product, update_product, \
     delete_product, get_categories, delete_category, get_category_by_id, get_category_by_name,\
@@ -16,7 +16,7 @@ def main_page_api():
     products_link = url_for('products_api')
 
     # Displaying links on the main page
-    return (f'<a href="{categories_link}">Categories</a><br><br><a href="{products_link}">Products</a>')
+    return f'<a href="{categories_link}">Categories</a><br><br><a href="{products_link}">Products</a>'
 
 @app.route('/products', methods=['GET', 'POST'])
 def products_api():
@@ -29,8 +29,10 @@ def products_api():
             filtered_products = get_products_by_id(id_filter)
         if name_filter is not None:
             filtered_products = get_products_by_name(name_filter)
-
-        products_dicts = [serialize_product(product) for product in filtered_products]
+        if not filtered_products:
+            return "Product not found", 404
+        else:
+            products_dicts = [serialize_product(product) for product in filtered_products]
         return products_dicts
 
     if request.method == "POST":
@@ -41,6 +43,16 @@ def products_api():
         # Return success
         return serialize_product(product), 201
 
+@app.route('/products/<int:product_id>', methods=['GET'])
+def products_api_by_id(product_id):
+    products_link = url_for('products_api')
+    if request.method == "GET":
+        product_by_id = get_products_by_id(product_id)
+        searched_product = [serialize_product(product) for product in product_by_id]
+        if searched_product:
+            return searched_product, 200
+        else:
+            return f'<a>There is no such product yet</a><br><br><br><a href="{products_link}">BACK</a>', 404
 
 @app.route('/products/<int:product_id>', methods=['PUT', 'PATCH', 'DELETE'])
 def product_api(product_id):
@@ -62,6 +74,7 @@ def product_api(product_id):
 @app.route('/categories', methods=['GET', 'POST'])
 def categories_api():
     if request.method == "GET":
+        categories_link = url_for('categories_api')
         name_filter = request.args.get('name')
         id_filter = request.args.get('id')
         filtered_dicts = get_categories()
@@ -71,8 +84,10 @@ def categories_api():
             filtered_dicts = get_category_by_name(name_filter)
         if id_filter:
             filtered_dicts = get_category_by_id(id_filter)
-
-        categories_dicts = [serialize_category(category) for category in filtered_dicts]
+        if not filtered_dicts:
+            return f'<a>There is no such category yet</a><br><br><br><a href="{categories_link}">BACK</a>', 404
+        else:
+            categories_dicts = [serialize_category(category) for category in filtered_dicts]
         # Return categories
         return categories_dicts
 
@@ -82,6 +97,17 @@ def categories_api():
 
         # Return success
         return serialize_category(category), 201
+
+@app.route('/categories/<int:category_id>', methods=['GET'])
+def categories_api_by_id(category_id):
+    categories_link = url_for('categories_api')
+    if request.method == "GET":
+        category_by_id = get_category_by_id(category_id)
+        searched_category = [serialize_category(category) for category in category_by_id]
+        if searched_category:
+            return searched_category, 200
+        else:
+            return f'<a>There is no such category yet</a><br><br><br><a href="{categories_link}">BACK</a>', 404
 
 
 @app.route('/categories/<int:category_id>', methods=['PUT', 'PATCH', 'DELETE'])
