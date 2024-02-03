@@ -39,12 +39,6 @@ def get_category_by_id(id_filter=None):
 
     return query
 
-def get_categories():
-    # Get all categories
-    query = Category.select().order_by(Category.name)
-
-    return query
-
 
 def create_category(name, is_adult_only):
     # Create category and return category_name
@@ -94,7 +88,7 @@ class Product(BaseModel):
         table_name = 'products'
 
 
-def get_products_by_name(name_filter=None):
+def get_product_by_name(name_filter=None):
     # Get products by name
     query = Product.select(
         Product, Category
@@ -105,7 +99,7 @@ def get_products_by_name(name_filter=None):
 
     return query
 
-def get_products_by_id(id_filter=None):
+def get_product_by_id(id_filter=None):
     # Get products by id
     query = Product.select(
         Product, Category
@@ -113,15 +107,6 @@ def get_products_by_id(id_filter=None):
 
     if id_filter is not None:
         query = query.where(Product.id == id_filter)
-        return query
-
-def get_products():
-    # Get all products
-
-    query = Product.select(
-        Product, Category
-    ).join(Category).order_by(-Product.name)
-
     return query
 
 
@@ -160,4 +145,4 @@ if __name__ == '__main__':
     #update_category(category_id=10, name='Chips', is_adult_only=0)
     #create_category(name='', is_adult_only=0)
 
-    get_product_by_id(1)
+    get_products_by_id(1)

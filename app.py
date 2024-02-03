@@ -1,7 +1,7 @@
 from flask import Flask, request, url_for
 
-from db import get_products, get_products_by_id, get_products_by_name, create_product, update_product, \
-    delete_product, get_categories, delete_category, get_category_by_id, get_category_by_name,\
+from db import get_product_by_id, get_product_by_name, create_product, update_product, \
+    delete_product, delete_category, get_category_by_id, get_category_by_name,\
     create_category, update_category
 from exceptions import ValidationError
 from serializers import serialize_product, serialize_category
@@ -23,12 +23,12 @@ def products_api():
     if request.method == "GET":
         name_filter = request.args.get('name')
         id_filter = request.args.get('id')
-        filtered_products = get_products()
+        filtered_products = get_product_by_id()
 
         if id_filter is not None:
-            filtered_products = get_products_by_id(id_filter)
+            filtered_products = get_product_by_id(id_filter)
         if name_filter is not None:
-            filtered_products = get_products_by_name(name_filter)
+            filtered_products = get_product_by_name(name_filter)
         if not filtered_products:
             return "Product not found", 404
         else:
@@ -47,7 +47,7 @@ def products_api():
 def products_api_by_id(product_id):
     products_link = url_for('products_api')
     if request.method == "GET":
-        product_by_id = get_products_by_id(product_id)
+        product_by_id = get_product_by_id(product_id)
         searched_product = [serialize_product(product) for product in product_by_id]
         if searched_product:
             return searched_product, 200
@@ -77,7 +77,7 @@ def categories_api():
         categories_link = url_for('categories_api')
         name_filter = request.args.get('name')
         id_filter = request.args.get('id')
-        filtered_dicts = get_categories()
+        filtered_dicts = get_category_by_id()
 
         # Convert categories to list of dicts
         if name_filter:
