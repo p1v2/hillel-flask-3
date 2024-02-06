@@ -61,7 +61,7 @@ def product_api(product_id):
         product_by_id = get_product_by_id(product_id)
         searched_product = [serialize_product(product) for product in product_by_id]
         if searched_product:
-            # Update a category
+            # Update a product
             product = deserialize_product(request.get_json(), product_id)
             # Return success
             return serialize_product(product), 200

@@ -17,9 +17,10 @@ def test_product_create():
 
 def test_product_update():
     # Update a product
-    response = requests.put('http://localhost:5001/products/12000', json={
-        'name': 'Torchin',
+    response = requests.put('http://localhost:5001/products/1', json={
+        'name': 'Schedro',
         'price': 30,
+        'category': 10
     })
 
     if response.status_code == 404:
@@ -43,7 +44,7 @@ def test_product_delete():
 def test_category_create():
     # Create a category
     response = requests.post('http://localhost:5001/categories', json={
-        'name': 'Juice',
+        'name': 'Sauce',
         'is_adult_only': 0
     })
 
@@ -90,6 +91,7 @@ def check_category_exist(category_id):
 
 
 if __name__ == "__main__":
+    test_category_create()
     test_product_update()
     #check_category_exist(30)
     #check_category_exist(9)
