@@ -17,13 +17,16 @@ def test_product_create():
 
 def test_product_update():
     # Update a product
-    response = requests.put('http://localhost:5001/products/12', json={
+    response = requests.put('http://localhost:5001/products/12000', json={
         'name': 'Torchin',
         'price': 30,
     })
 
-    print(response.status_code)
-    print(response.json())
+    if response.status_code == 404:
+        print(f'There is no such product to update. Status code: {response.status_code}')
+    else:
+        print(response.status_code)
+        print(response.json())
 
 
 def test_product_delete():
@@ -53,13 +56,15 @@ def test_category_create():
 
 def test_category_update():
     # Update a category
-    response = requests.put(f'http://localhost:5001/categories/2', json={
-        'name': 'Butter Cream',
-        'is_adult_only': 0,
+    response = requests.put(f'http://localhost:5001/categories/7', json={
+        'name': 'Tobacco',
+        'is_adult_only': 1,
     })
-
-    print(response.status_code)
-    print(response.json())
+    if response.status_code == 404:
+        print(f'There is no such category to update. Status code: {response.status_code}')
+    else:
+        print(response.status_code)
+        print(response.json())
 
 def test_category_delete(category_id):
     # Delete a category
@@ -85,8 +90,8 @@ def check_category_exist(category_id):
 
 
 if __name__ == "__main__":
-    #test_category_update()
-    check_category_exist(30)
+    test_product_update()
+    #check_category_exist(30)
     #check_category_exist(9)
     #test_product_create()
     #test_category_exist()

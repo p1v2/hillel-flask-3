@@ -140,9 +140,9 @@ def delete_product(product_id):
 
 
 if __name__ == '__main__':
-    #Category.create(name='Detergents', is_adult_only=1)
+    Category.create(name='Detergents', is_adult_only=1)
     #delete_category(category_name='Detergents')
     #update_category(category_id=10, name='Chips', is_adult_only=0)
     #create_category(name='', is_adult_only=0)
 
-    get_products_by_id(1)
+    #get_products_by_id(1)

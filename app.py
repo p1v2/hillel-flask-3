@@ -56,11 +56,17 @@ def products_api_by_id(product_id):
 
 @app.route('/products/<int:product_id>', methods=['PUT', 'PATCH', 'DELETE'])
 def product_api(product_id):
+    products_link = url_for('products_api')
     if request.method == "PUT":
-        # Update a product
-        product = deserialize_product(request.get_json(), product_id)
-        # Return success
-        return serialize_product(product)
+        product_by_id = get_product_by_id(product_id)
+        searched_product = [serialize_product(product) for product in product_by_id]
+        if searched_product:
+            # Update a category
+            product = deserialize_product(request.get_json(), product_id)
+            # Return success
+            return serialize_product(product), 200
+        else:
+            return f'<a>There is no such product yet</a><br><br><br><a href="{products_link}">BACK</a>', 404
     if request.method == "PATCH":
         # Update a product
         product = deserialize_product(request.get_json(), product_id, partial=True)
@@ -112,11 +118,17 @@ def categories_api_by_id(category_id):
 
 @app.route('/categories/<int:category_id>', methods=['PUT', 'PATCH', 'DELETE'])
 def category_api(category_id):
+    categories_link = url_for('categories_api')
     if request.method == "PUT":
+        category_by_id = get_category_by_id(category_id)
+        searched_category = [serialize_category(category) for category in category_by_id]
+        if searched_category:
         # Update a category
-        category = deserialize_category(request.get_json(), category_id)
+            category = deserialize_category(request.get_json(), category_id)
         # Return success
-        return serialize_category(category)
+            return serialize_category(category), 200
+        else:
+            return f'<a>There is no such category yet</a><br><br><br><a href="{categories_link}">BACK</a>', 404
     if request.method == "PATCH":
         # Update a category
         category = deserialize_category(request.get_json(), category_id, partial=True)

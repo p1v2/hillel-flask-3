@@ -67,4 +67,5 @@ def delete_category(category_id):
 
 
 if __name__ == '__main__':
-    delete_category('9')
+    #create_table_products()
+    create_table_categories()
